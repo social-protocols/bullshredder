@@ -1,0 +1,14 @@
+// https://www.jetpack.io/devbox
+{
+  "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.1/.schema/devbox.schema.json",
+  "packages": [
+    "just@latest",
+    "mill@latest",
+    "entr@latest",
+    "earthly@latest",
+    "jdk-headless@21",
+    "path:flakes/scalafmt#scalafmt",
+  ],
+}
+// this file supports comments
+// vim: set ft=jsonc:
