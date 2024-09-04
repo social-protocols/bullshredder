@@ -29,6 +29,9 @@ package object llm {
     model: String,
     messages: Vector[Message],
     response_format: ResponseFormat[T],
+    seed: Option[Long] = None,
+    temperature: Option[Double] = None,
+    top_p: Option[Double] = None,
   )
   object Request {
     implicit def w[T]: W[Request[T]] = macroW

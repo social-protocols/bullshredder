@@ -50,6 +50,7 @@ object lib extends Module {
       ivy"com.lihaoyi::requests:0.9.0", // http requests
       ivy"com.github.andyglow::scala-jsonschema::0.7.11",
       ivy"com.github.andyglow::scala-jsonschema-ujson::0.7.11",
+      ivy"com.lihaoyi::pprint:0.9.0",
     )
   }
   object jvm extends SharedModule
