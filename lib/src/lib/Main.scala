@@ -27,9 +27,7 @@ case class InitialGuesses(
   hasty_generalization: Double,
   slippery_slope: Double,
   straw_man: Double,
-//  tu_quoque: Double,
-// rthetorical
-//  nimby: Double,
+  tu_quoque: Double,
 )
 
 object InitialGuesses {
@@ -60,7 +58,7 @@ object Main {
       llm.Request(
         model = "gpt-4o-mini",
         messages = Vector(llm.Message(role = "system", content = prompt), llm.Message(role = "user", text)),
-        response_format = llm.ResponseFormat.jsonSchema(Foo.schema, "fallacy_detection"),
+        response_format = llm.ResponseFormat.jsonSchema(Foo.schema),
       )
     )
   }

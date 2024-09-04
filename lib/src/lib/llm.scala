@@ -11,17 +11,18 @@ package object llm {
     json_schema: ResponseSchema[T],
   )
   object ResponseFormat {
-    def jsonSchema[T](schema: json.Schema[T], name: String) = ResponseFormat[T](
+    def jsonSchema[T](schema: json.Schema[T]) = ResponseFormat[T](
       `type` = "json_schema",
-      json_schema = ResponseSchema(name = name, schema = schema, strict = true),
+      json_schema = ResponseSchema(name = "event", schema = schema, strict = true),
     )
     implicit def w[T]: W[ResponseFormat[T]] = macroW
   }
 
   case class ResponseSchema[T](name: String, schema: json.Schema[T], strict: Boolean)
   object ResponseSchema {
-    implicit def w[T]: W[ResponseSchema[T]] =
-      upickle.default.writer[Obj].comap(x => Obj("name" -> x.name, "schema" -> AsU.UJsonSchemaOps(x.schema).asU(Draft12("TODO:URL"))))
+    implicit def schemaWriter[T]: W[json.Schema[T]] =
+      upickle.default.writer[Obj].comap(schema => AsU.UJsonSchemaOps(schema).asU(Draft12("TODO:URL")))
+    implicit def w[T]: W[ResponseSchema[T]] = macroW
   }
 
   case class Request[T](
@@ -68,27 +69,11 @@ package object llm {
       "Authorization" -> s"Bearer $apiKey",
     )
 
-    println(upickle.default.write(request, indent = 1))
+    // println(upickle.default.write(request, indent = 1))
     val httpResponse =
       requests.post(url, headers = headers, data = upickle.default.write(request), readTimeout = 60000)
     val response = upickle.default.read[Response](httpResponse.text())
-    println(response.choices.head.message.content)
+    // println(response.choices.head.message.content)
     upickle.default.read[T](response.choices.head.message.content)
   }
-  //
-  // case class ChatHistory(history: Vector[String]) {
-  //   def sendSnippet(command: String): ChatHistory = {
-  //     var newHistory = history
-  //     newHistory :+= command
-  //     // call GPT Api
-  //     val answer = callGPTAPI(history.mkString("\n"))
-  //     newHistory :+= answer
-  //     copy(history = newHistory)
-  //   }
-  //
-  // }
-  //
-  // object ChatHistory {
-  //   def apply(): ChatHistory = ChatHistory()
-  // }
 }
